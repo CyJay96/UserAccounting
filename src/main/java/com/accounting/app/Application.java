@@ -2,6 +2,7 @@ package com.accounting.app;
 
 import com.accounting.model.User;
 import com.accounting.service.UserService;
+import com.accounting.service.Validator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,6 +12,7 @@ public class Application {
     public void start() {
         List<User> users = new ArrayList<>();
         UserService userService = new UserService();
+        Validator valid = new Validator();
 
         int countUsers = 1;
 
