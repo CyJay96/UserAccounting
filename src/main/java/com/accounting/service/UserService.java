@@ -4,7 +4,6 @@ import com.accounting.model.User;
 import com.accounting.model.UserRoles;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
 
@@ -21,17 +20,17 @@ public class UserService {
             System.out.print("Enter the surname of the user: ");
             String surname = in.next();
 
-            System.out.print("Enter the email of the user: ");
+            System.out.print("Enter the email of the user (xxx@xxx.xxx): ");
             String email = valid.inputEmail();
 
             List<String> phoneNumbers = new ArrayList<>();
             System.out.print("How many phone numbers does the user have? ");
             int minCountPhoneNumbers = 1;
             int maxCountPhoneNumbers = 2;
-            int countPhoneNumbers = valid.InputIntValue(minCountPhoneNumbers, maxCountPhoneNumbers);
+            int countPhoneNumbers = valid.inputIntValue(minCountPhoneNumbers, maxCountPhoneNumbers);
 
             for (int i = 0; i < countPhoneNumbers; ++i) {
-                System.out.print("Enter " + (i + 1) + " phone number: ");
+                System.out.print("Enter " + (i + 1) + " phone number (375 xx xxxxxxx): ");
                 String phoneNumber = valid.inputPhoneNumber();
 
                 phoneNumbers.add(phoneNumber);
@@ -43,17 +42,17 @@ public class UserService {
 
             int minRoleNumber = 1;
             int maxRoleNumber = UserRoles.values().length;
-            int roleNumber = valid.InputIntValue(minRoleNumber, maxRoleNumber);
-            roles.add(UserRoles.getNameById(roleNumber - 1));
+            int firstRoleNumber = valid.inputIntValue(minRoleNumber, maxRoleNumber);
+            roles.add(UserRoles.getNameById(firstRoleNumber - 1));
 
-            if (roleNumber < maxRoleNumber) {
+            if (firstRoleNumber < maxRoleNumber) {
                 System.out.println("Do you want to choose another user role? (yes/no)");
                 boolean answer = valid.inputYesNo();
 
                 if (answer) {
                     System.out.println("Choose another user role:");
                     System.out.println(UserRoles.getAllRoles());
-                    roles.add(valid.inputRole());
+                    roles.add(valid.inputSecondRole(UserRoles.getNameById(firstRoleNumber - 1)));
                 }
             }
 
