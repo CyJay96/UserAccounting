@@ -22,7 +22,7 @@ public class UserService {
 
     public void addUser(List<User> users){
         Scanner in = new Scanner(System.in);
-        UserValidator valid = new UserValidator();
+        UserValidator validate = new UserValidator();
 
         try {
             // add name
@@ -35,16 +35,16 @@ public class UserService {
 
             // add email
             System.out.print("Enter the email of the user (xxx@xxx.xxx): ");
-            String email = valid.inputEmail();
+            String email = validate.inputEmail();
 
             // add phone numbers
             List<String> phoneNumbers = new ArrayList<>();
             System.out.print("How many phone numbers does the user have? ");
-            int countPhoneNumbers = valid.inputIntValue(minCountPhones, maxCountPhones);
+            int countPhoneNumbers = validate.inputIntValue(minCountPhones, maxCountPhones);
 
             for (int i = 0; i < countPhoneNumbers; ++i) {
                 System.out.print("Enter " + (i + 1) + " phone number (375 xx xxxxxxx): ");
-                String phoneNumber = valid.inputPhoneNumber();
+                String phoneNumber = validate.inputPhoneNumber();
 
                 phoneNumbers.add(phoneNumber);
             }
@@ -54,17 +54,17 @@ public class UserService {
             System.out.println("Choose an user role:");
             System.out.println(UserRoles.getAllRoles());
 
-            int firstRoleNumber = valid.inputIntValue(minSizeRolesList, maxSizeRolesList);
+            int firstRoleNumber = validate.inputIntValue(minSizeRolesList, maxSizeRolesList);
             roles.add(UserRoles.getNameById(firstRoleNumber - 1));
 
             if (firstRoleNumber < maxSizeRolesList) {
                 System.out.println("Do you want to choose another user role? (yes/no)");
-                boolean answer = valid.inputYesNo();
+                boolean answer = validate.inputYesNo();
 
                 if (answer) {
                     System.out.println("Choose another user role:");
                     System.out.println(UserRoles.getAllRoles());
-                    roles.add(valid.inputAnotherRole(UserRoles.getNameById(firstRoleNumber - 1)));
+                    roles.add(validate.inputAnotherRole(UserRoles.getNameById(firstRoleNumber - 1)));
                 }
             }
 
@@ -90,7 +90,7 @@ public class UserService {
 
     public void editUser(List<User> users, int id) {
         Scanner in = new Scanner(System.in);
-        UserValidator valid = new UserValidator();
+        UserValidator validate = new UserValidator();
 
         int minEditChoice = 1;
         int maxEditChoice = 6;
@@ -105,7 +105,7 @@ public class UserService {
         System.out.println("6 - Exit");
 
         try {
-            int editChoice = valid.inputIntValue(minEditChoice, maxEditChoice);
+            int editChoice = validate.inputIntValue(minEditChoice, maxEditChoice);
 
             switch (editChoice) { // edit user
                 case 1: // edit name
@@ -123,7 +123,7 @@ public class UserService {
                 case 3: // edit email
                     System.out.println("Current email: " + users.get(id).getEmail());
                     System.out.print("Enter the new email (xxx@xxx.xxx): ");
-                    String email = valid.inputEmail();
+                    String email = validate.inputEmail();
                     users.get(id).setEmail(email);
                     break;
                 case 4: // edit phone numbers
@@ -131,13 +131,13 @@ public class UserService {
                     System.out.println("1-Add 2-Edit existing 3-Remove existing (1-3)");
                     int minEditPhoneChoice = 1;
                     int maxEditPhoneChoice = 3;
-                    int phoneEditChoice = valid.inputIntValue(minEditPhoneChoice, maxEditPhoneChoice);
+                    int phoneEditChoice = validate.inputIntValue(minEditPhoneChoice, maxEditPhoneChoice);
 
                     switch (phoneEditChoice) {
                         case 1: // add phone number
                             if (users.get(id).getPhoneNumbers().size() < maxCountPhones) {
                                 System.out.println("Enter the new phone number (375 xx xxxxxxx): ");
-                                String phoneNumber = valid.inputPhoneNumber();
+                                String phoneNumber = validate.inputPhoneNumber();
                                 users.get(id).getPhoneNumbers().add(phoneNumber);
                             } else {
                                 System.out.println("No more phone numbers can be added");
@@ -152,9 +152,9 @@ public class UserService {
                             }
 
                             System.out.print("Which phone number do you want to edit? (1-" + currentCountPhones + "): ");
-                            int currentPhoneEditChoice = valid.inputIntValue(minCountPhones, currentCountPhones);
+                            int currentPhoneEditChoice = validate.inputIntValue(minCountPhones, currentCountPhones);
                             System.out.print("Enter the new phone number (375 xx xxxxxxx): ");
-                            String phoneNumber = valid.inputPhoneNumber();
+                            String phoneNumber = validate.inputPhoneNumber();
                             users.get(id).getPhoneNumbers().set(currentPhoneEditChoice - 1, phoneNumber);
                             break;
                         case 3: // removing existing phone number
@@ -166,7 +166,7 @@ public class UserService {
                             }
 
                             System.out.print("Which phone number do you want to remove? (1-" + currentCountPhones + "): ");
-                            currentPhoneEditChoice = valid.inputIntValue(minCountPhones, currentCountPhones);
+                            currentPhoneEditChoice = validate.inputIntValue(minCountPhones, currentCountPhones);
                             users.get(id).getPhoneNumbers().remove(currentPhoneEditChoice - 1);
                             break;
                         default:
@@ -182,7 +182,7 @@ public class UserService {
                     int maxEditRolesChoice = 4;
                     System.out.println("1-Add 2-Edit existing 3-Remove existing 4-Exit (" + minEditRolesChoice +
                             "-" + maxEditRolesChoice + ")");
-                    int rolesEditChoice = valid.inputIntValue(minEditRolesChoice, maxEditRolesChoice);
+                    int rolesEditChoice = validate.inputIntValue(minEditRolesChoice, maxEditRolesChoice);
 
                     switch (rolesEditChoice) {
                         case 1: // add role
@@ -193,7 +193,7 @@ public class UserService {
 
                                 System.out.println("Choose an user role:");
                                 System.out.println(UserRoles.getAllRoles());
-                                int firstRoleNumber = valid.inputIntValue(minSizeRolesList, maxSizeRolesList);
+                                int firstRoleNumber = validate.inputIntValue(minSizeRolesList, maxSizeRolesList);
 
                                 users.get(id).getRoles().add(UserRoles.getNameById(firstRoleNumber - 1));
                             }
@@ -201,7 +201,7 @@ public class UserService {
                             if (users.get(id).getRoles().size() < maxCountRoles) {
                                 if (wasRolesEmpty) {
                                     System.out.println("Do you want to choose another user role? (yes/no)");
-                                    boolean answer = valid.inputYesNo();
+                                    boolean answer = validate.inputYesNo();
                                     if (!answer) {
                                         break;
                                     }
@@ -211,7 +211,7 @@ public class UserService {
                                 System.out.println(UserRoles.getAllRoles());
                                 String firstRoleName = UserRoles.valueOf(users.get(id).getRoles().get(indexFirstRole)).name();
                                 if (!firstRoleName.equals(UserRoles.SUPER_ADMIN.name())) {
-                                    users.get(id).getRoles().add(valid.inputAnotherRole(firstRoleName));
+                                    users.get(id).getRoles().add(validate.inputAnotherRole(firstRoleName));
                                 } else {
                                     System.out.println("No more roles can be added");
                                 }
@@ -232,11 +232,11 @@ public class UserService {
                             if (currentCountRoles < maxCountRoles) { // current count of roles = 1
                                 System.out.println("Choose a new user role:");
                                 System.out.println(UserRoles.getAllRoles());
-                                int newRoleNumber = valid.inputIntValue(minSizeRolesList, maxSizeRolesList);
+                                int newRoleNumber = validate.inputIntValue(minSizeRolesList, maxSizeRolesList);
                                 users.get(id).getRoles().set(indexFirstRole, UserRoles.getNameById(newRoleNumber - 1));
                             } else { // current count of roles = 2
                                 System.out.print("Which role do you want to edit? (1-" + currentCountRoles + "): ");
-                                int currentRoleEditChoice = valid.inputIntValue(minCountRoles, currentCountRoles);
+                                int currentRoleEditChoice = validate.inputIntValue(minCountRoles, currentCountRoles);
 
                                 System.out.println("Choose a new user role:");
                                 System.out.println(UserRoles.getAllRoles());
@@ -244,12 +244,12 @@ public class UserService {
                                 switch (currentRoleEditChoice) {
                                     case 1: // edit the first role
                                         String secondRoleName = UserRoles.valueOf(users.get(id).getRoles().get(indexSecondRole)).name();
-                                        String newFirstRole = valid.inputAnotherRole(secondRoleName);
+                                        String newFirstRole = validate.inputAnotherRole(secondRoleName);
                                         users.get(id).getRoles().set(indexFirstRole, newFirstRole);
                                         break;
                                     case 2: // edit the second role
                                         String firstRoleName = UserRoles.valueOf(users.get(id).getRoles().get(indexFirstRole)).name();
-                                        String newSecondRole = valid.inputAnotherRole(firstRoleName);
+                                        String newSecondRole = validate.inputAnotherRole(firstRoleName);
                                         users.get(id).getRoles().set(indexSecondRole, newSecondRole);
                                         break;
                                     default:
@@ -267,7 +267,7 @@ public class UserService {
 
                             System.out.println("Current roles: " + users.get(id).getRoles());
                             System.out.print("Which role do you want to remove? (1-" + currentCountRoles + "): ");
-                            int numberRoleRemove = valid.inputIntValue(minCountRoles, currentCountRoles);
+                            int numberRoleRemove = validate.inputIntValue(minCountRoles, currentCountRoles);
                             users.get(id).getRoles().remove(numberRoleRemove - 1);
                             break;
                         default:

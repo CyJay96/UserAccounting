@@ -3,99 +3,67 @@ package com.accounting.validation;
 import com.accounting.model.UserRoles;
 
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class UserValidator {
 
     private final int minSizeRolesList = 1;
     private final int maxSizeRolesList = UserRoles.values().length;
 
+    public boolean validateEmail(String email) {
+        if (email == null || email.isEmpty()) {
+            return false;
+        }
+
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,}$";
+
+        Pattern pattern = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+
+        return matcher.matches();
+    }
+
     public String inputEmail() throws Exception {
         Scanner in = new Scanner(System.in);
 
         String email;
-//todo use regex to validate
+
         while (true) {
              email = in.next();
 
-            int pos = 0;
-
-            int firstPartEmailLength = 0;
-            while (pos < email.length() && email.charAt(pos) != '@') {
-                firstPartEmailLength++;
-                pos++;
-            }
-            pos++;
-
-            int secondPartEmailLength = 0;
-            while (pos < email.length() && email.charAt(pos) != '.') {
-                secondPartEmailLength++;
-                pos++;
-            }
-            pos++;
-
-            int thirdPartEmailLength = 0;
-            while (pos++ < email.length()) {
-                thirdPartEmailLength++;
-            }
-
-            if (firstPartEmailLength < 1 || firstPartEmailLength >= email.length() ||
-                    secondPartEmailLength < 1 || secondPartEmailLength >= email.length() ||
-                    thirdPartEmailLength < 1 || thirdPartEmailLength >= email.length()) {
-                System.out.println("PLease, try again");
-            } else {
-                break;
-            }
+             if (!validateEmail(email)) {
+                 System.out.println("PLease, try again");
+             } else {
+                 break;
+             }
         }
 
         return email;
     }
 
+    public boolean validatePhone(String phone) {
+        if (phone == null || phone.isEmpty()) {
+            return false;
+        }
+
+        String emailRegex = "([375]{3})([ ])([0-9]{2})\\2([0-9]{7})";
+
+        Pattern pattern = Pattern.compile(emailRegex, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(phone);
+
+        return matcher.matches();
+    }
+
     public String inputPhoneNumber() throws Exception {
         Scanner in = new Scanner(System.in);
-//todo use regex to validate
-        int constLengthSecondPart = 2;
-        int constLengthThirdPart = 7;
 
         String phoneNumber;
 
         while (true) {
             phoneNumber = in.nextLine();
 
-            int pos = 0;
-            boolean onlyNumbers = true;
-            String codeBelarus = new String("375");
-
-            String firstPartPhone = "";
-            while (pos < phoneNumber.length() && onlyNumbers && phoneNumber.charAt(pos) != ' ') {
-                firstPartPhone += phoneNumber.charAt(pos);
-                pos++;
-            }
-            pos++;
-
-            int secondPartPhoneLength = 0;
-            while (pos < phoneNumber.length() && onlyNumbers && phoneNumber.charAt(pos) != ' ') {
-                secondPartPhoneLength++;
-                if (phoneNumber.charAt(pos) < '0' || phoneNumber.charAt(pos) > '9') {
-                    onlyNumbers = false;
-                }
-                pos++;
-            }
-            pos++;
-
-            int thirdPartPhoneLength = 0;
-            while (pos < phoneNumber.length() && onlyNumbers) {
-                thirdPartPhoneLength++;
-                if (phoneNumber.charAt(pos) < '0' || phoneNumber.charAt(pos) > '9') {
-                    onlyNumbers = false;
-                }
-                pos++;
-            }
-
-            if (!firstPartPhone.equals(codeBelarus) || secondPartPhoneLength != constLengthSecondPart ||
-                    thirdPartPhoneLength != constLengthThirdPart || !onlyNumbers) {
-                if (!firstPartPhone.equals(codeBelarus)) {
-                    System.out.println("We are still working with the phone numbers of Belarus");
-                }
+            if (!validatePhone(phoneNumber)) {
                 System.out.println("PLease, try again");
             } else {
                 break;
