@@ -1,16 +1,19 @@
-package com.accounting.service;
+package com.accounting.validation;
 
 import com.accounting.model.UserRoles;
 
 import java.util.Scanner;
 
-public class Validator {
+public class UserValidator {
+
+    private final int minSizeRolesList = 1;
+    private final int maxSizeRolesList = UserRoles.values().length;
 
     public String inputEmail() throws Exception {
         Scanner in = new Scanner(System.in);
 
         String email;
-
+//todo use regex to validate
         while (true) {
              email = in.next();
 
@@ -49,6 +52,9 @@ public class Validator {
 
     public String inputPhoneNumber() throws Exception {
         Scanner in = new Scanner(System.in);
+//todo use regex to validate
+        int constLengthSecondPart = 2;
+        int constLengthThirdPart = 7;
 
         String phoneNumber;
 
@@ -57,13 +63,11 @@ public class Validator {
 
             int pos = 0;
             boolean onlyNumbers = true;
+            String codeBelarus = new String("375");
 
-            int firstPartPhoneLength = 0;
+            String firstPartPhone = "";
             while (pos < phoneNumber.length() && onlyNumbers && phoneNumber.charAt(pos) != ' ') {
-                firstPartPhoneLength++;
-                if (phoneNumber.charAt(pos) < '0' || phoneNumber.charAt(pos) > '9') {
-                    onlyNumbers = false;
-                }
+                firstPartPhone += phoneNumber.charAt(pos);
                 pos++;
             }
             pos++;
@@ -87,7 +91,11 @@ public class Validator {
                 pos++;
             }
 
-            if (firstPartPhoneLength != 3 || secondPartPhoneLength != 2 || thirdPartPhoneLength != 7 || !onlyNumbers) {
+            if (!firstPartPhone.equals(codeBelarus) || secondPartPhoneLength != constLengthSecondPart ||
+                    thirdPartPhoneLength != constLengthThirdPart || !onlyNumbers) {
+                if (!firstPartPhone.equals(codeBelarus)) {
+                    System.out.println("We are still working with the phone numbers of Belarus");
+                }
                 System.out.println("PLease, try again");
             } else {
                 break;
@@ -97,20 +105,18 @@ public class Validator {
         return phoneNumber;
     }
 
-    public String inputSecondRole(String firstRoleName) throws Exception {
-        int minRoleNumber = 1;
-        int maxRoleNumber = UserRoles.values().length;
-
-        int firstRoleLevel = UserRoles.valueOf(firstRoleName).getLevel();
+    public String inputAnotherRole(String existingRoleName) throws Exception {
+        int firstRoleLevel = UserRoles.valueOf(existingRoleName).getLevel();
+        int superAdminRoleLevel = UserRoles.SUPER_ADMIN.getLevel();
 
         String secondRoleName;
 
         while (true) {
-            int secondRoleNumber = inputIntValue(minRoleNumber, maxRoleNumber);
+            int secondRoleNumber = inputIntValue(minSizeRolesList, maxSizeRolesList);
             secondRoleName = UserRoles.getNameById(secondRoleNumber - 1);
             int secondRoleLevel = UserRoles.valueOf(secondRoleName).getLevel();
 
-            if (firstRoleLevel == secondRoleLevel) {
+            if (firstRoleLevel == superAdminRoleLevel || secondRoleLevel == superAdminRoleLevel || secondRoleLevel == firstRoleLevel) {
                 System.out.println("Choose another user role");
             } else {
                 break;
@@ -189,7 +195,7 @@ public class Validator {
         while (in.hasNext()) {
             if (in.hasNextInt()) {
                 data = in.nextInt();
-                if (data < lowerBound && data > upperBound) {
+                if (data < lowerBound || data > upperBound) {
                     System.out.println("Please, try again");
                     continue;
                 } else {

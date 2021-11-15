@@ -18,6 +18,12 @@ public class UserInterface {
             userService.addUser(users);
         }
 
+        //userService.viewUserById(users, 0);
+
+        userService.viewAllUsers(users);
+        userService.editUser(users, 0);
+        userService.editUser(users, 0);
+        userService.editUser(users, 0);
         userService.viewAllUsers(users);
     }
 
