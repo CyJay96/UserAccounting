@@ -92,46 +92,4 @@ public class User {
                 ", roles = " + roles;
     }
 
-    public static class UserBuilder {
-        private User user;
-
-        public UserBuilder() {
-            user = new User();
-        }
-
-        public UserBuilder withId(int id) {
-            user.id = id;
-            return this;
-        }
-
-        public UserBuilder withName(String name) {
-            user.name = name;
-            return this;
-        }
-
-        public UserBuilder withSurname(String surname) {
-            user.surname = surname;
-            return this;
-        }
-
-        public UserBuilder withEmail(String email) {
-            user.email = email;
-            return this;
-        }
-
-        public UserBuilder withPhoneNumbers(List<String> phoneNumbers) {
-            user.phoneNumbers = phoneNumbers;
-            return this;
-        }
-
-        public UserBuilder withRoles(List<String> roles) {
-            user.roles = roles;
-            return this;
-        }
-
-        public User build() {
-            return user;
-        }
-    }
-
 }
