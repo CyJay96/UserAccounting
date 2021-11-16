@@ -84,10 +84,6 @@ public class UserService {
         }
     }
 
-    public void addUser(List<User> users, User user) {
-        users.add(user);
-    }
-
     public void editUser(List<User> users, int id) {
         Scanner in = new Scanner(System.in);
         UserValidator validate = new UserValidator();
@@ -282,12 +278,9 @@ public class UserService {
         }
     }
 
-    public void removeUser(List<User> users, User user) {
-        users.remove(user);
-    }
-
     public void removeUser(List<User> users, int id) {
         users.remove(id);
+        updateUsersId(users);
     }
 
     public void viewUserById(List<User> users, int id) {
@@ -297,6 +290,12 @@ public class UserService {
     public void viewAllUsers(List<User> users) {
         for (User user : users) {
             System.out.println(user);
+        }
+    }
+
+    public void updateUsersId(List<User> users) {
+        for (int i = 0; i < users.size(); ++i) {
+            users.get(i).setId(i + 1);
         }
     }
 

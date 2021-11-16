@@ -73,25 +73,34 @@ public class UserValidator {
         return phoneNumber;
     }
 
-    public String inputAnotherRole(String existingRoleName) throws Exception {
-        int firstRoleLevel = UserRoles.valueOf(existingRoleName).getLevel();
+    public boolean validateAnotherRole(String existingRoleName, String anotherRoleName) {
+        int existingRoleLevel = UserRoles.valueOf(existingRoleName).getLevel();
+        int anotherRoleLevel = UserRoles.valueOf(anotherRoleName).getLevel();
         int superAdminRoleLevel = UserRoles.SUPER_ADMIN.getLevel();
 
-        String secondRoleName;
+        if (existingRoleLevel != superAdminRoleLevel && anotherRoleLevel != superAdminRoleLevel &&
+                anotherRoleLevel != existingRoleLevel) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public String inputAnotherRole(String existingRoleName) throws Exception {
+        String anotherRoleName;
 
         while (true) {
             int secondRoleNumber = inputIntValue(minSizeRolesList, maxSizeRolesList);
-            secondRoleName = UserRoles.getNameById(secondRoleNumber - 1);
-            int secondRoleLevel = UserRoles.valueOf(secondRoleName).getLevel();
+            anotherRoleName = UserRoles.getNameById(secondRoleNumber - 1);
 
-            if (firstRoleLevel == superAdminRoleLevel || secondRoleLevel == superAdminRoleLevel || secondRoleLevel == firstRoleLevel) {
-                System.out.println("Choose another user role");
-            } else {
+            if (validateAnotherRole(existingRoleName, anotherRoleName)) {
                 break;
+            } else {
+                System.out.println("Choose another user role");
             }
         }
 
-        return secondRoleName;
+        return anotherRoleName;
     }
 
     public boolean inputYesNo() throws Exception {
