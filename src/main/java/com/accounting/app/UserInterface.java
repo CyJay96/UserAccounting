@@ -1,9 +1,12 @@
 package com.accounting.app;
 
 import com.accounting.model.User;
+import com.accounting.service.DataBaseService;
 import com.accounting.service.UserService;
 import com.accounting.validation.UserValidator;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,12 +15,30 @@ public class UserInterface {
     public void start() {
         UserService userService = new UserService();
         UserValidator validate = new UserValidator();
+        DataBaseService dataBaseService = new DataBaseService();
 
         List<User> users = new ArrayList<>();
+
+        String fileName = "database.txt";
+        File file = new File(fileName);
+        try {
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+        } catch (IOException exception) {
+            System.out.println("Something went wrong: " + exception.getMessage());
+        }
 
         boolean work = true;
 
         while (work) {
+
+            if (users.isEmpty()) {
+                dataBaseService.readDataBase(users, file);
+            }
+
+            dataBaseService.clearDataBase(file);
+            dataBaseService.writeDataBase(users, file);
 
             int minOption = 1;
             int maxOption = 5;
@@ -90,6 +111,8 @@ public class UserInterface {
             }
 
             System.out.println();
+
+            userService.updateUsersId(users);
 
         }
     }
