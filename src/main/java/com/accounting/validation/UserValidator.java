@@ -24,19 +24,23 @@ public class UserValidator {
         return matcher.matches();
     }
 
-    public String inputEmail() throws Exception {
+    public String inputEmail() {
         Scanner in = new Scanner(System.in);
 
         String email;
 
         while (true) {
-             email = in.next();
+            try {
+                email = in.next();
 
-             if (!validateEmail(email)) {
-                 System.out.println("PLease, try again");
-             } else {
-                 break;
-             }
+                if (!validateEmail(email)) {
+                    System.out.println("PLease, try again");
+                } else {
+                    break;
+                }
+            } catch (Exception exception) {
+                System.out.println("Something went wrong: " + exception.getMessage());
+            }
         }
 
         return email;
@@ -55,18 +59,22 @@ public class UserValidator {
         return matcher.matches();
     }
 
-    public String inputPhoneNumber() throws Exception {
+    public String inputPhoneNumber() {
         Scanner in = new Scanner(System.in);
 
         String phoneNumber;
 
         while (true) {
-            phoneNumber = in.nextLine();
+            try {
+                phoneNumber = in.nextLine();
 
-            if (!validatePhone(phoneNumber)) {
-                System.out.println("PLease, try again");
-            } else {
-                break;
+                if (!validatePhone(phoneNumber)) {
+                    System.out.println("PLease, try again");
+                } else {
+                    break;
+                }
+            } catch (Exception exception) {
+                System.out.println("Something went wrong: " + exception.getMessage());
             }
         }
 
@@ -86,7 +94,7 @@ public class UserValidator {
         }
     }
 
-    public String inputAnotherRole(String existingRoleName) throws Exception {
+    public String inputAnotherRole(String existingRoleName) {
         String anotherRoleName;
 
         while (true) {
@@ -103,17 +111,27 @@ public class UserValidator {
         return anotherRoleName;
     }
 
-    public boolean inputYesNo() throws Exception {
+    public boolean inputYesNo() {
         Scanner in = new Scanner(System.in);
 
-        String answer = in.next();
+        String answer = null;
+
+        try {
+            answer = in.next();
+        } catch (Exception exception) {
+            System.out.println("Something went wrong: " + exception.getMessage());
+        }
 
         String yes = new String("yes");
         String no = new String("no");
 
         while (!answer.equals(yes) && !answer.equals(no)) {
             System.out.println("Please, try again");
-            answer = in.next();
+            try {
+                answer = in.next();
+            } catch (Exception exception) {
+                System.out.println("Something went wrong: " + exception.getMessage());
+            }
         }
 
         if (answer.equals(yes)) {
@@ -123,65 +141,77 @@ public class UserValidator {
         }
     }
 
-    public int inputIntValue() throws Exception {
+    public int inputIntValue() {
         Scanner in = new Scanner(System.in);
 
         int data = 0;
 
-        while (in.hasNext()) {
-            if (in.hasNextInt()) {
-                data = in.nextInt();
-                break;
-            } else {
-                System.out.println("Please, try again");
-                in.next();
+        try {
+            while (in.hasNext()) {
+                if (in.hasNextInt()) {
+                    data = in.nextInt();
+                    break;
+                } else {
+                    System.out.println("Please, try again");
+                    in.next();
+                }
             }
+        } catch (Exception exception) {
+            System.out.println("Something went wrong: " + exception.getMessage());
         }
 
         return data;
     }
 
-    public int inputIntValue(int lowerBound) throws Exception {
+    public int inputIntValue(int lowerBound) {
         Scanner in = new Scanner(System.in);
 
         int data = 0;
 
-        while (in.hasNext()) {
-            if (in.hasNextInt()) {
-                data = in.nextInt();
-                if (data < lowerBound) {
-                    System.out.println("Please, try again");
-                    continue;
+        try {
+            while (in.hasNext()) {
+                if (in.hasNextInt()) {
+                    data = in.nextInt();
+                    if (data < lowerBound) {
+                        System.out.println("Please, try again");
+                        continue;
+                    } else {
+                        break;
+                    }
                 } else {
-                    break;
+                    System.out.println("Please, try again");
+                    in.next();
                 }
-            } else {
-                System.out.println("Please, try again");
-                in.next();
             }
+        } catch (Exception exception) {
+            System.out.println("Something went wrong: " + exception.getMessage());
         }
 
         return data;
     }
 
-    public int inputIntValue(int lowerBound, int upperBound) throws Exception {
+    public int inputIntValue(int lowerBound, int upperBound) {
         Scanner in = new Scanner(System.in);
 
         int data = 0;
 
-        while (in.hasNext()) {
-            if (in.hasNextInt()) {
-                data = in.nextInt();
-                if (data < lowerBound || data > upperBound) {
-                    System.out.println("Please, try again");
-                    continue;
+        try {
+            while (in.hasNext()) {
+                if (in.hasNextInt()) {
+                    data = in.nextInt();
+                    if (data < lowerBound || data > upperBound) {
+                        System.out.println("Please, try again");
+                        continue;
+                    } else {
+                        break;
+                    }
                 } else {
-                    break;
+                    System.out.println("Please, try again");
+                    in.next();
                 }
-            } else {
-                System.out.println("Please, try again");
-                in.next();
             }
+        } catch (Exception exception) {
+            System.out.println("Something went wrong: " + exception.getMessage());
         }
 
         return data;

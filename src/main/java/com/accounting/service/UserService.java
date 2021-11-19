@@ -20,7 +20,7 @@ public class UserService {
     private final int minSizeRolesList = 1;
     private final int maxSizeRolesList = UserRoles.values().length;
 
-    public void addUser(List<User> users){
+    public void addUser(List<User> users) {
         Scanner in = new Scanner(System.in);
         UserValidator validate = new UserValidator();
 
@@ -80,7 +80,7 @@ public class UserService {
 
             users.add(user);
         } catch (Exception exception) {
-            System.out.println("Something went wrong");
+            System.out.println("Something went wrong: " + exception.getMessage());
         }
     }
 
@@ -91,19 +91,22 @@ public class UserService {
         int minEditChoice = 1;
         int maxEditChoice = 6;
 
-        System.out.println("What do you want to edit? (" + minEditChoice + "-" + maxEditChoice + ")");
+        boolean workEdit = true;
 
-        System.out.println("1 - Name: " + users.get(id).getName());
-        System.out.println("2 - Surname: " + users.get(id).getSurname());
-        System.out.println("3 - Email: " + users.get(id).getEmail());
-        System.out.println("4 - Phone numbers: " + users.get(id).getPhoneNumbers());
-        System.out.println("5 - Roles: " + users.get(id).getRoles());
-        System.out.println("6 - Exit");
+        while (workEdit) {
 
-        try {
+            System.out.println("What do you want to edit? (" + minEditChoice + "-" + maxEditChoice + ")");
+
+            System.out.println("1 - Name: " + users.get(id).getName());
+            System.out.println("2 - Surname: " + users.get(id).getSurname());
+            System.out.println("3 - Email: " + users.get(id).getEmail());
+            System.out.println("4 - Phone numbers: " + users.get(id).getPhoneNumbers());
+            System.out.println("5 - Roles: " + users.get(id).getRoles());
+            System.out.println("6 - Exit");
+
             int editChoice = validate.inputIntValue(minEditChoice, maxEditChoice);
 
-            switch (editChoice) { // edit user
+            switch (editChoice) {
                 case 1: // edit name
                     System.out.println("Current name: " + users.get(id).getName());
                     System.out.print("Enter the new name: ");
@@ -123,158 +126,180 @@ public class UserService {
                     users.get(id).setEmail(email);
                     break;
                 case 4: // edit phone numbers
-                    System.out.println("Current phone numbers: " + users.get(id).getPhoneNumbers());
-                    System.out.println("1-Add 2-Edit existing 3-Remove existing (1-3)");
-                    int minEditPhoneChoice = 1;
-                    int maxEditPhoneChoice = 3;
-                    int phoneEditChoice = validate.inputIntValue(minEditPhoneChoice, maxEditPhoneChoice);
+                    boolean workEditPhones = true;
 
-                    switch (phoneEditChoice) {
-                        case 1: // add phone number
-                            if (users.get(id).getPhoneNumbers().size() < maxCountPhones) {
-                                System.out.println("Enter the new phone number (375 xx xxxxxxx): ");
+                    while (workEditPhones) {
+
+                        int minEditPhoneChoice = 1;
+                        int maxEditPhoneChoice = 4;
+
+                        System.out.println("Current phone numbers: " + users.get(id).getPhoneNumbers());
+                        System.out.println("1-Add 2-Edit existing 3-Remove existing 4-Exit (" + minEditPhoneChoice +
+                                "-" + maxEditPhoneChoice + ")");
+                        int phoneEditChoice = validate.inputIntValue(minEditPhoneChoice, maxEditPhoneChoice);
+
+                        switch (phoneEditChoice) {
+                            case 1: // add phone number
+                                if (users.get(id).getPhoneNumbers().size() < maxCountPhones) {
+                                    System.out.println("Enter the new phone number (375 xx xxxxxxx): ");
+                                    String phoneNumber = validate.inputPhoneNumber();
+                                    users.get(id).getPhoneNumbers().add(phoneNumber);
+                                } else {
+                                    System.out.println("No more phone numbers can be added");
+                                }
+                                break;
+                            case 2: // editing existing phone number
+                                int currentCountPhones = users.get(id).getPhoneNumbers().size();
+
+                                if (currentCountPhones == 0) {
+                                    System.out.println("No phones to edit");
+                                    break;
+                                }
+
+                                System.out.print("Which phone number do you want to edit? (1-" + currentCountPhones + "): ");
+                                int currentPhoneEditChoice = validate.inputIntValue(minCountPhones, currentCountPhones);
+                                System.out.print("Enter the new phone number (375 xx xxxxxxx): ");
                                 String phoneNumber = validate.inputPhoneNumber();
-                                users.get(id).getPhoneNumbers().add(phoneNumber);
-                            } else {
-                                System.out.println("No more phone numbers can be added");
-                            }
-                            break;
-                        case 2: // editing existing phone number
-                            int currentCountPhones = users.get(id).getPhoneNumbers().size();
-
-                            if (currentCountPhones == 0) {
-                                System.out.println("No phones to edit");
+                                users.get(id).getPhoneNumbers().set(currentPhoneEditChoice - 1, phoneNumber);
                                 break;
-                            }
+                            case 3: // removing existing phone number
+                                currentCountPhones = users.get(id).getPhoneNumbers().size();
 
-                            System.out.print("Which phone number do you want to edit? (1-" + currentCountPhones + "): ");
-                            int currentPhoneEditChoice = validate.inputIntValue(minCountPhones, currentCountPhones);
-                            System.out.print("Enter the new phone number (375 xx xxxxxxx): ");
-                            String phoneNumber = validate.inputPhoneNumber();
-                            users.get(id).getPhoneNumbers().set(currentPhoneEditChoice - 1, phoneNumber);
-                            break;
-                        case 3: // removing existing phone number
-                            currentCountPhones = users.get(id).getPhoneNumbers().size();
+                                if (currentCountPhones == 0) {
+                                    System.out.println("No phones to remove");
+                                    break;
+                                }
 
-                            if (currentCountPhones == 0) {
-                                System.out.println("No phones to remove");
+                                System.out.print("Which phone number do you want to remove? (1-" + currentCountPhones + "): ");
+                                currentPhoneEditChoice = validate.inputIntValue(minCountPhones, currentCountPhones);
+                                users.get(id).getPhoneNumbers().remove(currentPhoneEditChoice - 1);
                                 break;
-                            }
-
-                            System.out.print("Which phone number do you want to remove? (1-" + currentCountPhones + "): ");
-                            currentPhoneEditChoice = validate.inputIntValue(minCountPhones, currentCountPhones);
-                            users.get(id).getPhoneNumbers().remove(currentPhoneEditChoice - 1);
-                            break;
-                        default:
-                            System.out.println("Please, try again");
+                            case 4:
+                                workEditPhones = false;
+                                break;
+                            default:
+                                System.out.println("Please, try again");
+                        }
                     }
                     break;
                 case 5: // edit roles
                     int indexFirstRole = 0;
                     int indexSecondRole = 1;
 
-                    System.out.println("Current roles: " + users.get(id).getRoles());
-                    int minEditRolesChoice = 1;
-                    int maxEditRolesChoice = 4;
-                    System.out.println("1-Add 2-Edit existing 3-Remove existing 4-Exit (" + minEditRolesChoice +
-                            "-" + maxEditRolesChoice + ")");
-                    int rolesEditChoice = validate.inputIntValue(minEditRolesChoice, maxEditRolesChoice);
+                    boolean workEditRoles = true;
 
-                    switch (rolesEditChoice) {
-                        case 1: // add role
-                            boolean wasRolesEmpty = false;
+                    while (workEditRoles) {
 
-                            if (users.get(id).getRoles().isEmpty()) {
-                                wasRolesEmpty = true;
+                        int minEditRolesChoice = 1;
+                        int maxEditRolesChoice = 4;
 
-                                System.out.println("Choose an user role:");
-                                System.out.println(UserRoles.getAllRoles());
-                                int firstRoleNumber = validate.inputIntValue(minSizeRolesList, maxSizeRolesList);
+                        System.out.println("Current roles: " + users.get(id).getRoles());
+                        System.out.println("1-Add 2-Edit existing 3-Remove existing 4-Exit (" + minEditRolesChoice +
+                                "-" + maxEditRolesChoice + ")");
+                        int rolesEditChoice = validate.inputIntValue(minEditRolesChoice, maxEditRolesChoice);
 
-                                users.get(id).getRoles().add(UserRoles.getNameById(firstRoleNumber - 1));
-                            }
+                        switch (rolesEditChoice) {
+                            case 1: // add role
+                                boolean wasRolesEmpty = false;
 
-                            if (users.get(id).getRoles().size() < maxCountRoles) {
-                                if (wasRolesEmpty) {
-                                    System.out.println("Do you want to choose another user role? (yes/no)");
-                                    boolean answer = validate.inputYesNo();
-                                    if (!answer) {
-                                        break;
-                                    }
+                                if (users.get(id).getRoles().isEmpty()) {
+                                    wasRolesEmpty = true;
+
+                                    System.out.println("Choose an user role:");
+                                    System.out.println(UserRoles.getAllRoles());
+                                    int firstRoleNumber = validate.inputIntValue(minSizeRolesList, maxSizeRolesList);
+
+                                    users.get(id).getRoles().add(UserRoles.getNameById(firstRoleNumber - 1));
                                 }
 
-                                System.out.println("Choose an user role:");
-                                System.out.println(UserRoles.getAllRoles());
                                 String firstRoleName = UserRoles.valueOf(users.get(id).getRoles().get(indexFirstRole)).name();
-                                if (!firstRoleName.equals(UserRoles.SUPER_ADMIN.name())) {
-                                    users.get(id).getRoles().add(validate.inputAnotherRole(firstRoleName));
+
+                                if (users.get(id).getRoles().size() < maxCountRoles && !firstRoleName.equals(UserRoles.SUPER_ADMIN.name())) {
+                                    if (wasRolesEmpty) {
+                                        System.out.println("Do you want to choose another user role? (yes/no)");
+                                        boolean answer = validate.inputYesNo();
+                                        if (!answer) {
+                                            break;
+                                        }
+                                    }
+
+                                    System.out.println("Choose an user role:");
+                                    System.out.println(UserRoles.getAllRoles());
+
+                                    if (!firstRoleName.equals(UserRoles.SUPER_ADMIN.name())) {
+                                        users.get(id).getRoles().add(validate.inputAnotherRole(firstRoleName));
+                                    } else {
+                                        System.out.println("No more roles can be added");
+                                    }
                                 } else {
                                     System.out.println("No more roles can be added");
                                 }
-                            } else {
-                                System.out.println("No more roles can be added");
-                            }
-                            break;
-                        case 2: // editing existing role
-                            int currentCountRoles = users.get(id).getRoles().size();
-
-                            if (currentCountRoles == 0) {
-                                System.out.println("No roles to edit");
                                 break;
-                            }
+                            case 2: // editing existing role
+                                int currentCountRoles = users.get(id).getRoles().size();
 
-                            System.out.println("Current roles: " + users.get(id).getRoles());
-
-                            if (currentCountRoles < maxCountRoles) { // current count of roles = 1
-                                System.out.println("Choose a new user role:");
-                                System.out.println(UserRoles.getAllRoles());
-                                int newRoleNumber = validate.inputIntValue(minSizeRolesList, maxSizeRolesList);
-                                users.get(id).getRoles().set(indexFirstRole, UserRoles.getNameById(newRoleNumber - 1));
-                            } else { // current count of roles = 2
-                                System.out.print("Which role do you want to edit? (1-" + currentCountRoles + "): ");
-                                int currentRoleEditChoice = validate.inputIntValue(minCountRoles, currentCountRoles);
-
-                                System.out.println("Choose a new user role:");
-                                System.out.println(UserRoles.getAllRoles());
-
-                                switch (currentRoleEditChoice) {
-                                    case 1: // edit the first role
-                                        String secondRoleName = UserRoles.valueOf(users.get(id).getRoles().get(indexSecondRole)).name();
-                                        String newFirstRole = validate.inputAnotherRole(secondRoleName);
-                                        users.get(id).getRoles().set(indexFirstRole, newFirstRole);
-                                        break;
-                                    case 2: // edit the second role
-                                        String firstRoleName = UserRoles.valueOf(users.get(id).getRoles().get(indexFirstRole)).name();
-                                        String newSecondRole = validate.inputAnotherRole(firstRoleName);
-                                        users.get(id).getRoles().set(indexSecondRole, newSecondRole);
-                                        break;
-                                    default:
-                                        break;
+                                if (currentCountRoles == 0) {
+                                    System.out.println("No roles to edit");
+                                    break;
                                 }
-                            }
-                            break;
-                        case 3: // removing existing role
-                            currentCountRoles = users.get(id).getRoles().size();
 
-                            if (currentCountRoles == 0) {
-                                System.out.println("No roles to remove");
+                                System.out.println("Current roles: " + users.get(id).getRoles());
+
+                                if (currentCountRoles < maxCountRoles) { // current count of roles = 1
+                                    System.out.println("Choose a new user role:");
+                                    System.out.println(UserRoles.getAllRoles());
+                                    int newRoleNumber = validate.inputIntValue(minSizeRolesList, maxSizeRolesList);
+                                    users.get(id).getRoles().set(indexFirstRole, UserRoles.getNameById(newRoleNumber - 1));
+                                } else { // current count of roles = 2
+                                    System.out.print("Which role do you want to edit? (1-" + currentCountRoles + "): ");
+                                    int currentRoleEditChoice = validate.inputIntValue(minCountRoles, currentCountRoles);
+
+                                    System.out.println("Choose a new user role:");
+                                    System.out.println(UserRoles.getAllRoles());
+
+                                    switch (currentRoleEditChoice) {
+                                        case 1: // edit the first role
+                                            String secondRoleNameEdit = UserRoles.valueOf(users.get(id).getRoles().get(indexSecondRole)).name();
+                                            String newFirstRole = validate.inputAnotherRole(secondRoleNameEdit);
+                                            users.get(id).getRoles().set(indexFirstRole, newFirstRole);
+                                            break;
+                                        case 2: // edit the second role
+                                            String firstRoleNameEdit = UserRoles.valueOf(users.get(id).getRoles().get(indexFirstRole)).name();
+                                            String newSecondRole = validate.inputAnotherRole(firstRoleNameEdit);
+                                            users.get(id).getRoles().set(indexSecondRole, newSecondRole);
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                }
                                 break;
-                            }
+                            case 3: // removing existing role
+                                currentCountRoles = users.get(id).getRoles().size();
 
-                            System.out.println("Current roles: " + users.get(id).getRoles());
-                            System.out.print("Which role do you want to remove? (1-" + currentCountRoles + "): ");
-                            int numberRoleRemove = validate.inputIntValue(minCountRoles, currentCountRoles);
-                            users.get(id).getRoles().remove(numberRoleRemove - 1);
-                            break;
-                        default:
-                            break;
+                                if (currentCountRoles == 0) {
+                                    System.out.println("No roles to remove");
+                                    break;
+                                }
+
+                                System.out.println("Current roles: " + users.get(id).getRoles());
+                                System.out.print("Which role do you want to remove? (1-" + currentCountRoles + "): ");
+                                int numberRoleRemove = validate.inputIntValue(minCountRoles, currentCountRoles);
+                                users.get(id).getRoles().remove(numberRoleRemove - 1);
+                                break;
+                            case 4:
+                                workEditRoles = false;
+                                break;
+                            default:
+                                System.out.println("Please, try again");
+                        }
                     }
                     break;
-                default:
+                case 6:
+                    workEdit = false;
                     break;
+                default:
+                    System.out.println("Please, try again");
             }
-        } catch (Exception exception) {
-            System.out.println("Something went wrong");
         }
     }
 
