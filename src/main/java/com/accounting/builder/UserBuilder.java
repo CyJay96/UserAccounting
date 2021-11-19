@@ -52,4 +52,5 @@ public class UserBuilder implements UserBuilderImpl {
     public User build() {
         return user;
     }
+
 }

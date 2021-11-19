@@ -1,9 +1,16 @@
 package com.accounting.model;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.util.Base64;
 import java.util.List;
 import java.util.Objects;
 
-public class User {
+public class User implements Externalizable {
+
+    private static final long SERIAL_VERSION_UID = 1L;
 
     private int id;
     private String name;
@@ -90,6 +97,34 @@ public class User {
                 ", email = '" + email + '\'' +
                 ", phone numbers = " + phoneNumbers +
                 ", roles = " + roles;
+    }
+
+    @Override
+    public void writeExternal(ObjectOutput out) throws IOException {
+        out.writeObject(id);
+        out.writeObject(encryptString(name));
+        out.writeObject(encryptString(surname));
+        out.writeObject(encryptString(email));
+        out.writeObject(phoneNumbers);
+        out.writeObject(roles);
+    }
+
+    @Override
+    public void readExternal(ObjectInput in) throws IOException, ClassNotFoundException {
+        id = (int) in.readObject();
+        name = decryptString((String) in.readObject());
+        surname = decryptString((String) in.readObject());
+        email = decryptString((String) in.readObject());
+        phoneNumbers = (List<String>) in.readObject();
+        roles = (List<String>) in.readObject();
+    }
+
+    private String encryptString(String data) {
+        return Base64.getEncoder().encodeToString(data.getBytes());
+    }
+
+    private String decryptString(String data) {
+        return new String(Base64.getDecoder().decode(data));
     }
 
 }
